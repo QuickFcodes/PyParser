@@ -160,11 +160,13 @@ def inte() -> None:
                 tks[i].t = dl[tks[i].v]
                 tks[i].v = None
 while 1:
+    print("请输入输入文件名")
     u = input(":")
     if u == "exit":
         exit(0)
     loader(u)
     inte()
+    print("请输入输出文件名")
     u = input(":")
     u = open(u,"w")
     for i in range(len(tks)):
