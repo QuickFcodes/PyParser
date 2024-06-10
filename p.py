@@ -9,6 +9,8 @@ POS = "."
 ID = "id"
 RIGH = "}"
 LEFT = "{"
+LFC = "["
+RFC = "]"
 EDL = "endl"
 LP = "("
 RP = ")"
@@ -28,8 +30,22 @@ IF = "if"
 WHILE = "while"
 SWITCH = "switch"
 CASE = "case"
-alls = "+-=/*{}().:\n ,<>!\";"
-dl = {"for":FOR,"if":IF,"while":WHILE,"switch":SWITCH,"let":LET,"case":CASE}
+GOTO = "goto"
+RET = "return"
+CLS = "class"
+alls = "+-=/*{}().:\n ,<>!\";[]"
+dl = {
+    "for":FOR,
+    "if":IF,
+    "while":WHILE,
+    "switch":SWITCH,
+    "let":LET,
+    "case":CASE,
+    "goto":GOTO,
+    "func":FUNC,
+    "return":RET,
+    "class":CLS
+}
 class token:
     def __init__(self,t: str,v: any = None) -> None:
         self.t = t
@@ -38,16 +54,6 @@ def putt(g: token):
     return f"<{g.t}:{g.v}>"
 buff: str = ''
 tks: list[token] = []
-def loader(name: str) -> None:
-    global buff
-    try:
-        j = open(name,"r")
-    except:
-        print("未找到文件")
-        return
-    buff = j.read()
-    j.close()
-    return
 def inte() -> None:
     global buff,tks
     i=0
@@ -93,6 +99,14 @@ def inte() -> None:
                 continue
             case '}':
                 tks.append(token(RIGH))
+                i+=1
+                continue
+            case '[':
+                tks.append(token(LFC))
+                i+=1
+                continue
+            case ']':
+                tks.append(token(RFC))
                 i+=1
                 continue
             case '(':
@@ -160,13 +174,17 @@ def inte() -> None:
                 tks[i].t = dl[tks[i].v]
                 tks[i].v = None
 while 1:
-    print("请输入输入文件名")
     u = input(":")
     if u == "exit":
         exit(0)
-    loader(u)
+    try:
+        j = open(u,"r")
+    except:
+        print("未找到文件")
+        continue
+    buff = j.read()
+    j.close()
     inte()
-    print("请输入输出文件名")
     u = input(":")
     u = open(u,"w")
     for i in range(len(tks)):
